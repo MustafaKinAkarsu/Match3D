@@ -1,4 +1,6 @@
 using UnityEngine;
+using Unity;
+using System.Collections.Generic;
 
 public class GridGenerator : MonoBehaviour
 {
@@ -8,18 +10,28 @@ public class GridGenerator : MonoBehaviour
     private Vector3 startPosition;
     [SerializeField] GameObject[] gemPrefabs;
     int previousRandom;
+    public GameObject[,] instantiatedPrefabs;
+    Vector3 quadSize;
+    Vector3 cellSize;
+    public Vector3 CellSize
+    {
+        get { return cellSize; }
+        set { cellSize = value; }
+    }
+
 
     void Start()
     {
         startPosition = quad.GetComponent<Renderer>().bounds.min;
+        instantiatedPrefabs = new GameObject[rows, columns];
         CreateGrid();
     }
 
     void CreateGrid()
     {
-        
-        Vector3 quadSize = quad.GetComponent<Renderer>().bounds.size;
-        Vector3 cellSize = new Vector3(quadSize.x / columns, quadSize.y / rows, 1f);
+        //instantiatedPrefabs = new GameObject[rows, columns];
+        quadSize = quad.GetComponent<Renderer>().bounds.size;
+        CellSize = new Vector3(quadSize.x / columns, quadSize.y / rows, 1f);
 
         for (int row = 0; row < rows; row++)
         {
@@ -37,9 +49,34 @@ public class GridGenerator : MonoBehaviour
                 float yPos = (row * cellSize.y + cellSize.y / 2) + startPosition.y;
                 Vector3 position = new Vector3(xPos, yPos, 0f);
                 GameObject cell = Instantiate(gemPrefabs[random], position, Quaternion.identity);
+                //Debug.Log("Cell pos : " + cell.transform.position);
                 cell.transform.parent = transform;
+                instantiatedPrefabs[row, col] = cell;
+                //instantiatedCells.Add(cell);
             }
         }
     }
+    public GameObject GetCell(int row, int col)
+    {
+        if (row >= 0 && row < rows && col >= 0 && col < columns)
+        {
+            return instantiatedPrefabs[row, col];
+        }
+        else
+        {
+            Debug.LogError("Row or column index out of bounds.");
+            return null;
+        }
+    }
+    public Vector3 GetStartPosition()
+    {
+        return quad.transform.position - quadSize / 2f;
+    }
+
+    public Vector3 GetCellSize()
+    {
+        return cellSize;
+    }
+
 
 }
