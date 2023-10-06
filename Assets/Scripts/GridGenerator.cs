@@ -77,6 +77,6 @@ public class GridGenerator : MonoBehaviour
     {
         return cellSize;
     }
-
+    
 
 }
