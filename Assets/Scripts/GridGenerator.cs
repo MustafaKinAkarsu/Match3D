@@ -18,7 +18,11 @@ public class GridGenerator : MonoBehaviour
         get { return cellSize; }
         set { cellSize = value; }
     }
-
+    public Vector3 QuadSize
+    {
+        get { return quadSize; }
+        set { quadSize = value; }
+    }
 
     void Start()
     {
@@ -30,7 +34,7 @@ public class GridGenerator : MonoBehaviour
     void CreateGrid()
     {
         //instantiatedPrefabs = new GameObject[rows, columns];
-        quadSize = quad.GetComponent<Renderer>().bounds.size;
+        QuadSize = quad.GetComponent<Renderer>().bounds.size;
         CellSize = new Vector3(quadSize.x / columns, quadSize.y / rows, 1f);
 
         for (int row = 0; row < rows; row++)
