@@ -6,29 +6,22 @@ using UnityEngine.EventSystems;
 
 public class CellClickHandler : MonoBehaviour
 {
-    private GridGenerator gridManager; // Reference to the GridManager
-    public int column, row;
-    Vector2 currentPosition;
+    private GridGenerator gridGenerator; 
+    [SerializeField] int column, row;
+    public string TileType; 
     public static Action<CellClickHandler> OnCellClick;
-    public Vector2 CurrentPosition
-    {
-        get { return currentPosition; }
-        set { currentPosition = value; }
-    }
 
     private void Start()
     {
-        // Find the GridManager in the scene
-        gridManager = FindObjectOfType<GridGenerator>();
+        gridGenerator = GridGenerator.Instance;
         SetGridPosition((int)this.transform.position.x, (int)this.transform.position.y);
     }
 
-    public void SetGridPosition(int Row, int Col)
+    public void SetGridPosition(int Col, int Row)
     {
-        // Calculate the column and row indices based on the cell's position
         Vector3 cellPosition = new Vector3(Col, Row, 0f);
-        column = Mathf.FloorToInt((cellPosition.x - gridManager.GetStartPosition().x) / gridManager.GetCellSize().x);
-        row = Mathf.FloorToInt((cellPosition.y - gridManager.GetStartPosition().y) / gridManager.GetCellSize().y);
+        column = Mathf.FloorToInt((cellPosition.x - gridGenerator.GetStartPosition().x) / gridGenerator.GetCellSize().x);
+        row = Mathf.FloorToInt((cellPosition.y - gridGenerator.GetStartPosition().y) / gridGenerator.GetCellSize().y);
     }
     public Vector2 GetGridPosition()
     {
@@ -37,6 +30,8 @@ public class CellClickHandler : MonoBehaviour
     }
     private void OnMouseDown()
     {
+        Vector2 gridPos = GetGridPosition();
+        Debug.Log("Coordinates  " + "col : " + gridPos.x + " row " + gridPos.y);
         OnCellClick?.Invoke(this);
     }
 }
